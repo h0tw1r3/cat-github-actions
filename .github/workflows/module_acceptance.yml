@@ -14,7 +14,10 @@ on:
         required: false
         default: ''
         type: "string"
-
+      disable_apparmor:
+        description: "Disable and stop apparmor"
+        default: false
+        type: boolean
 
 jobs:
 
@@ -67,6 +70,12 @@ jobs:
 
       - name: "Checkout"
         uses: "actions/checkout@v4"
+
+      - name: "Disable Apparmor"
+        if: inputs.disable_apparmor == 'true'
+        run: |
+          sudo systemctl disable apparmor
+          sudo systemctl stop apparmor
 
       - name: "Setup ruby"
         uses: "ruby/setup-ruby@v1"
