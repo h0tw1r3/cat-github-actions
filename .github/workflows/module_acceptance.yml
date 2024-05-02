@@ -14,6 +14,10 @@ on:
         required: false
         default: ''
         type: "string"
+      kernel_modules:
+        description: "Volume map host kernel /lib/modules into docker container"
+        default: true
+        type: boolean
       disable_apparmor:
         description: "Disable and stop apparmor"
         default: false
@@ -91,7 +95,7 @@ jobs:
 
       - name: "Provision environment"
         run: |
-          if [[ "${{matrix.platforms.provider}}" == "docker" ]]; then
+          if [[ "${{ inputs.kernel_modules }}" == "true" ]] && [[ "${{matrix.platforms.provider}}" =~ docker* ]] ; then
             DOCKER_RUN_OPTS="docker_run_opts: {'--volume': '/lib/modules/$(uname -r):/lib/modules/$(uname -r)'}"
           else
             DOCKER_RUN_OPTS=''
